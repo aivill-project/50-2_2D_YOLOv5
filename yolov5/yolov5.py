@@ -11,9 +11,9 @@ parser.add_argument('--val', action='store_true', help='for val command')
 parser.add_argument('--test', action='store_true', help='for test command')
 
 # train, val option
-parser.add_argument('--batch_size', '--batch-size', type=int, default=32, help='batch size')
-parser.add_argument('--img', '--img-size', type=int, default=640, help='inference size (pixels)')
-parser.add_argument('--epochs', type=int, default=300, help='total training epochs')
+parser.add_argument('--batch_size', '--batch-size', type=int, default=16, help='batch size')
+parser.add_argument('--img', '--img-size', default=1200, help='inference size (pixels)')
+parser.add_argument('--epochs', type=int, default=100, help='total training epochs')
 parser.add_argument('--device', default='', help='cuda device, i,e, 0 or 0,1,2,3 or cpu')
 
 args = parser.parse_args()
@@ -38,10 +38,11 @@ def main():
     global weights
 
     if args.train:
-        img = args.img
+        img = int(args.img)
         batch_size = args.batch_size
         epochs = args.epochs
-        device = args.device
+        if args.device: device = args.device
+        else: device = 0
         optimizer = 'AdamW'
         project = 'result/train'
         name = 'nia50'
@@ -50,9 +51,10 @@ def main():
         subprocess.call(run_train, shell=True)
     
     if args.val:
-        img = args.img
+        img = int(args.img)
         batch_size = args.batch_size
-        device = args.device
+        if args.device: device = args.device
+        else: device = 0
         project = 'result/val'
         name = 'nia50'
         run_validate = f'python3 model/val.py --img {img} --batch-size {batch_size} --name {name} --project {project} --data {data} --weights {weights} \
@@ -60,7 +62,7 @@ def main():
         subprocess.call(run_validate, shell=True)
 
     if args.test:
-        img = '1200 1920'
+        img = str(args.img)
         project = 'result/test'
         name = 'nia50'
         # source = cwd + '/data/images'
