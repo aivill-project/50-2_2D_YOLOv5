@@ -12,20 +12,20 @@ parser.add_argument('--test', action='store_true', help='for test command')
 
 args = parser.parse_args()
 
-data = 'data/nia50_data_yolov5l6.yaml'
-model = 'data/nia50_model_yolov5l6.yaml'
+data = 'cfg/nia50_data_yolov5l6.yaml'
+model = 'cfg/nia50_model_yolov5l6.yaml'
 weights = 'ckpt/nia50_bestweights_yolov5l6.pt'
 
 def main():
-    cwd = os.getcwd()
-    images = glob.glob(cwd+'/data/images/*.jpg')
-    train, val = train_test_split(images, test_size=0.2, random_state=0)
+    # cwd = os.getcwd()
+    # images = glob.glob(cwd+'/data/images/*.jpg')
+    # train, val = train_test_split(images, test_size=0.2, random_state=0)
 
-    with open(cwd+'/data/ImageSets/train.txt', 'w') as f:
-        f.write('\n'.join(train))
+    # with open(cwd+'/data/ImageSets/train.txt', 'w') as f:
+    #     f.write('\n'.join(train))
     
-    with open(cwd+'/data/ImageSets/val.txt', 'w') as f:
-        f.write('\n'.join(val))
+    # with open(cwd+'/data/ImageSets/val.txt', 'w') as f:
+    #     f.write('\n'.join(val))
     
     global data
     global model
@@ -55,7 +55,8 @@ def main():
         img = '1200 1920'
         project = 'result/test'
         name = 'nia50'
-        source = cwd + '/data/images'
+        # source = cwd + '/data/images'
+        source = '../Data/50-2/images_2d'
         run_test = f'python3 model/detect.py --img {img} --conf 0.4 --project {project} --name {name} --source {source} --weights {weights} \
         --save-txt --save-conf --exist-ok'
         subprocess.call(run_test, shell=True)
