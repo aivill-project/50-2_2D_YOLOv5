@@ -66,7 +66,7 @@ def main():
         project = 'result/test'
         name = 'nia50'
         # source = cwd + '/data/images'
-        source = '../Data/50-2/images_2d'
+        source = '../Data/50-2/images_2d_test'
         run_test = f'python3 model/detect.py --img {img} --conf 0.4 --project {project} --name {name} --source {source} --weights {weights} \
         --save-txt --save-conf --exist-ok'
         subprocess.call(run_test, shell=True)
