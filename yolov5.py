@@ -1,8 +1,8 @@
 import argparse
 import subprocess
-import os
+# import os
 import glob
-from sklearn.model_selection import train_test_split
+# from sklearn.model_selection import train_test_split
 
 parser = argparse.ArgumentParser()
 
@@ -15,12 +15,16 @@ parser.add_argument('--batch_size', '--batch-size', type=int, default=16, help='
 parser.add_argument('--img', '--img-size', default=1200, help='inference size (pixels)')
 parser.add_argument('--epochs', type=int, default=100, help='total training epochs')
 parser.add_argument('--device', default='', help='cuda device, i,e, 0 or 0,1,2,3 or cpu')
+parser.add_argument('--weights', default=sorted(glob.glob('ckpt/*.pt'))[0], help='cuda device, i,e, 0 or 0,1,2,3 or cpu')
 
 args = parser.parse_args()
 
 data = 'cfg/nia50_data_yolov5l6.yaml'
 model = 'cfg/nia50_model_yolov5l6.yaml'
-weights = 'ckpt/nia50_bestweights_yolov5l6.pt'
+# weights = 'ckpt/nia50_bestweights_yolov5l6.pt'
+# weights = sorted(os.listdir('ckpt'))[0]
+weights = args.weights
+project = 'result/nia50'
 
 def main():
     # cwd = os.getcwd()
@@ -36,6 +40,7 @@ def main():
     global data
     global model
     global weights
+    global project
 
     if args.train:
         img = int(args.img)
@@ -44,10 +49,10 @@ def main():
         if args.device: device = args.device
         else: device = 0
         optimizer = 'AdamW'
-        project = 'result/train'
-        name = 'nia50'
+        # project = 'result/nia50'
+        name = 'train'
         run_train = f'python3 model/train.py --img {img} --batch-size {batch_size} --epochs {epochs} --optimizer {optimizer} \
-        --project {project} --name {name} --data {data} --cfg {model} --weights {weights} --device {device}'
+        --project {project} --name {name} --data {data} --cfg {model} --device {device}'
         subprocess.call(run_train, shell=True)
     
     if args.val:
@@ -55,16 +60,16 @@ def main():
         batch_size = args.batch_size
         if args.device: device = args.device
         else: device = 0
-        project = 'result/val'
-        name = 'nia50'
+        # project = 'result/nia50'
+        name = 'val'
         run_validate = f'python3 model/val.py --img {img} --batch-size {batch_size} --name {name} --project {project} --data {data} --weights {weights} \
         --verbose --save-txt --save-conf --save-json --exist-ok --device {device}'
         subprocess.call(run_validate, shell=True)
 
     if args.test:
         img = str(args.img)
-        project = 'result/test'
-        name = 'nia50'
+        # project = 'result/nia50'
+        name = 'test'
         # source = cwd + '/data/images'
         source = '../Data/50-2/images_2d_test'
         run_test = f'python3 model/detect.py --img {img} --conf 0.4 --project {project} --name {name} --source {source} --weights {weights} \
